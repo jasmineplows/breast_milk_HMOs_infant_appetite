@@ -25,4 +25,4 @@ font_add("Helvetica", "/System/Library/Fonts/Helvetica.ttc")
 showtext_auto()
 
 ##### Load in data ########
-dataSet <- read.delim("../Datasets/mothers_milk_data_new_hmos_added_predicted_fat_lean_added.txt",quote="", header=TRUE,check.names = FALSE)
+dataSet <- read.csv("/Users/JasminePlows/Documents/GitHub/breast_milk_HMOs_infant_appetite/Data/breast_milk_HMOs_data.csv",quote="", header=TRUE,check.names = FALSE)

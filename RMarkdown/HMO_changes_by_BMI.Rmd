@@ -1,0 +1,28 @@
+---
+title: "HMO changes by BMI etc"
+author: "Jasmine Plows"
+date: "6/22/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, results = 'hide')
+```
+
+
+```{r load_scripts, include = FALSE}
+source('01-import.R')
+source('02-tidy.R')
+```
+
+<b>1. Concentrations of HMOs over time split by maternal BMI (SECRETORS ONLY)</b>
+```{r}
+source("BMI_Figures.R")
+secretor_BMI_plots
+```
+
+<b>2. Concentrations of HMOs over time split by maternal BMI (NON-SECRETORS ONLY)</b>
+```{r}
+source("BMI_figures_non_secretors.R")
+non_secretor_BMI_plots
+```

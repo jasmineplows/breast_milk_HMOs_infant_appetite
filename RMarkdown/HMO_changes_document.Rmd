@@ -1,0 +1,64 @@
+---
+title: "HMO changes over time"
+author: "Jasmine Plows"
+date: "4/29/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+
+```{r load_scripts, include = FALSE}
+source('01-import.R')
+source('02-tidy.R')
+```
+
+<b>1. Average concentrations of HMOs over time split by secretor status</b>
+```{r}
+source("HMO_changes_plotted_together.R")
+plot_with_SUM
+```
+
+<b>2. Average concentrations of HMOs over time split by secretor status with SUM removed</b>
+```{r}
+source("HMO_changes_plotted_together.R")
+plot_without_SUM
+```
+
+<b>3. Concentrations of HMOs over time showing each individual ALL DATA</b>
+```{r, results='hide'}
+source("HMO_changes_individuals_purrr.R")
+all_individual_plots
+```
+
+<b>4. Concentrations of HMOs over time showing each individual COMPLETE DATA ONLY UP TO 12 MONTHS</b>
+```{r, results='hide'}
+source("HMO_changes_complete_obs.R")
+all_individual_plots_complete_cases_12m
+```
+
+<b>5. Concentrations of HMOs over time showing each individual COMPLETE DATA ONLY UP TO 18 MONTHS</b>
+```{r, results='hide'}
+source("HMO_changes_complete_obs.R")
+all_individual_plots_complete_cases_18m
+```
+
+<b>6.Concentrations of HMOs over time showing median and interquartile range ALL DATA</b>
+```{r, results='hide'}
+source("HMO_changes_median_IQR_plots.R")
+all_plots
+```
+
+<b>7.Concentrations of HMOs over time showing median and interquartile range COMPLETE DATA ONLY UP TO 12 MONTHS</b>
+```{r, results='hide'}
+source("HMO_changes_median_complete_obs.R")
+all_plots_median_complete_12m
+```
+
+<b>8.Concentrations of HMOs over time showing median and interquartile range COMPLETE DATA ONLY UP TO 18 MONTHS</b>
+```{r, results='hide'}
+source("HMO_changes_median_complete_obs.R")
+all_plots_median_complete_18m
+```

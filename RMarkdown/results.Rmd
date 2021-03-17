@@ -1,0 +1,332 @@
+---
+output:
+        Gmisc::docx_document
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r load_scripts, include = FALSE}
+source('01-import.R')
+source('02-tidy.R')
+source("Median_plots.R")
+source("Abundance_plot.R")
+source("Abundance_table.R")
+source("Summary_statistics_for_text.R")
+```
+
+```{r, include = FALSE, results = 'hide'}
+###Get descriptive stats
+getTable1Stats <- function(x, digits = 1, ...){
+  getDescriptionStatsBy(x = x,
+                        by = TabledataSet$Timepoint,
+                        digits = digits,
+                        header_count = '<i>n</i> = %s ',
+                        names_of_missing = NULL,
+                        useNA = "no",
+                        continuous_fn = describeMedian,
+                        statistics = list(continuous = getPvalAnova),
+                        ...)
+  
+}
+
+t1 <- list()
+t1[["Pre-pregnancy maternal BMI, kg/m<sup>2</sup>"]] <-
+  getTable1Stats(TabledataSet$prepreg_bmi_kgm2)
+
+t1[["Maternal BMI at 1 month postpartum, kg/m<sup>2</sup>"]] <-
+  getTable1Stats(TabledataSet$mom_BMI)
+
+t1[["Maternal Age at delivery, years"]] <- 
+  getTable1Stats(TabledataSet$mom_age_at_birth)
+
+t1[["Hollingshead index of socioeconomic status"]] <- 
+  getTable1Stats(TabledataSet$SES_index_final)
+
+t1[["Non-secretors, <i>n</i> (%)"]] <- 
+  getTable1Stats(TabledataSet$Secretor)
+
+t1[["Infant birthweight, kg"]] <- 
+  getTable1Stats(TabledataSet$baby_birthweight_kg)
+
+t1[["Female infant, <i>n</i> (%)"]] <- 
+  getTable1Stats(TabledataSet$baby_gender)
+
+t1[["Breastfeedings per day"]] <- 
+  getTable1Stats(TabledataSet$breastmilk_per_day)
+
+t1[["Child weight, kg"]] <- 
+  getTable1Stats(TabledataSet$inf_weight_kg)
+
+t1[["Child length/height, cm"]] <- 
+  getTable1Stats(TabledataSet$inf_length_cm)
+
+t1[["Child weight-for-age z-score"]] <- 
+  getTable1Stats(TabledataSet$zwei)
+
+t1[["Child weight-for-length z-score"]] <- 
+  getTable1Stats(TabledataSet$zwfl)
+
+t1[["Child length-for-age z-score"]] <- 
+  getTable1Stats(TabledataSet$zlen)
+
+t1[["Child BMI z-score"]] <- 
+  getTable1Stats(TabledataSet$zbmi)
+
+t1[["Child BMI percentile"]] <- 
+  getTable1Stats(TabledataSet$bmi_percentile)
+
+t1[["Child BMI category"]] <- 
+  getTable1Stats(TabledataSet$bmi_category)
+
+# which (is.na(TabledataSet$m_height_cm))
+
+```
+
+```{r, echo=FALSE, results = 'hide'}
+mergeDesc(t1,
+          htmlTable_args = list(css.rgroup = "",
+                                caption  = "<b>Table 1.</b> Participant descriptive statistics for the current analysis at each timepoint. Note that this is a prospective longitudinal cohort study, whereby each timepoint represents individuals from earlier timepoints that have reached and completed that timepoint. Data shown are median (interquartile range)"
+          ))
+```
+
+
+```{r, results='hide'}
+twofl_plot_median <- plot_fun_to_revise("Timepoint", "2FL") +
+        ylim(0,5000) +
+        labs(y = paste("2'FL", "(\u03BCg/mL)"))
+
+threefl_plot_median <- plot_fun_to_revise("Timepoint", "3FL") +
+        ylim(0,5000) +
+        labs(y = paste("3FL", "(\u03BCg/mL)"))
+
+lNnT_plot_median <- plot_fun_to_revise("Timepoint", "LNnT") +
+        ylim(0,600) +
+        labs(y = paste("LNnT", "(\u03BCg/mL)"))
+
+threesl_plot_median <- plot_fun_to_revise("Timepoint", "3SL") +
+        ylim(0,800) +
+        labs(y = paste("3'SL", "(\u03BCg/mL)"))
+
+DFLac_plot_median <- plot_fun_to_revise("Timepoint", "DFLac") +
+        ylim(0,600) +
+        labs(y = paste("DFLac", "(\u03BCg/mL)"))
+
+sixsl_plot_median <- plot_fun_to_revise("Timepoint", "6SL") +
+        ylim(0,1000) +
+        labs(y = paste("6'SL", "(\u03BCg/mL)"))
+
+lnt_plot_median <- plot_fun_to_revise("Timepoint", "LNT") +
+        ylim(0,1500) +
+        labs(y = paste("LNT", "(\u03BCg/mL)"))
+
+lnfp1_plot_median <- plot_fun_to_revise("Timepoint", "LNFPI") +
+        ylim(0,2000) +
+        labs(y = paste("LNFPI", "(\u03BCg/mL)"))
+
+lnfp2_plot_median <- plot_fun_to_revise("Timepoint", "LNFPII") +
+        labs(y = paste("LNFPII", "(\u03BCg/mL)"))
+
+lnfp3_plot_median <- plot_fun_to_revise("Timepoint", "LNFPIII") +
+        ylim(0,150) +
+        labs(y = paste("LNFPIII", "(\u03BCg/mL)"))
+
+lstb_plot_median <- plot_fun_to_revise("Timepoint", "LSTb") +
+        ylim(0,200) +
+        labs(y = paste("LSTb", "(\u03BCg/mL)"))
+
+lstc_plot_median <- plot_fun_to_revise("Timepoint", "LSTc") +
+        ylim(0,400) +
+        labs(y = paste("LSTc", "(\u03BCg/mL)"))
+
+dflnt_plot_median <- plot_fun_to_revise("Timepoint", "DFLNT") +
+        ylim(0,2000) +
+        labs(y = paste("DFLNT", "(\u03BCg/mL)"))
+
+lnh_plot_median <- plot_fun_to_revise("Timepoint", "LNH") +
+        ylim(0,150) +
+        labs(y = paste("LNH", "(\u03BCg/mL)"))
+
+dslnt_plot_median <- plot_fun_to_revise("Timepoint", "DSLNT") +
+        ylim(0,900) +
+        labs(y = paste("DSLNT", "(\u03BCg/mL)"))
+
+flnh_plot_median <- plot_fun_to_revise("Timepoint", "FLNH") +
+        ylim(0,250) +
+        labs(y = paste("FLNH", "(\u03BCg/mL)"))
+
+dflnh_plot_median <- plot_fun_to_revise("Timepoint", "DFLNH") +
+        ylim(0,300) +
+        labs(y = paste("DFLNH", "(\u03BCg/mL)"))
+
+dslnh_plot_median <- plot_fun_to_revise("Timepoint", "DSLNH") +
+        ylim(0,600) +
+        labs(y = paste("DSLNH", "(\u03BCg/mL)")) +
+        scale_y_continuous(breaks = seq(0, 600, by=100), limits=c(0,600))
+
+fdslnh_plot_median <- plot_fun_to_revise("Timepoint", "FDSLNH") +
+        ylim(0,500) +
+        labs(y = paste("FDSLNH", "(\u03BCg/mL)"))
+
+sum_plot_median <- plot_fun_to_revise("Timepoint", "SUM") +
+        # ylim(0,400) +
+        labs(y = paste("SUM", "(\u03BCg/mL)"))
+
+fig_1 <- ggpubr::ggarrange(twofl_plot_median, threefl_plot_median, lNnT_plot_median, threesl_plot_median, DFLac_plot_median, sixsl_plot_median, lnt_plot_median, lnfp1_plot_median, lnfp2_plot_median, lnfp3_plot_median, lstb_plot_median, lstc_plot_median, dflnt_plot_median, lnh_plot_median, dslnt_plot_median, flnh_plot_median, dflnh_plot_median, fdslnh_plot_median, dslnh_plot_median, sum_plot_median,
+          ncol = 4, nrow = 5, align = "hv",
+          labels = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"),
+          common.legend = TRUE,
+          font.label = list(size = 20))
+
+ggexport(fig_1,
+         filename = "Figure_1.pdf",
+         width = 20,
+         height = 28,
+         unit = "in",
+         dpi = 300)
+```
+
+```{r, results = 'hide'}
+ggexport(abundance_plot,
+         filename = "Figure_2.pdf",
+         width = 12,
+         height = 10,
+         unit = "in",
+         dpi = 300)
+
+
+write.table(abundance_table, file = "abundance_p_table.txt", sep = "\t")
+
+###Original 
+# abundance_table.p <- ggtexttable(abundance_table, rows = NULL, 
+#                         theme = ttheme(base_style = "default",
+#                                        base_size = 16,
+#                                        base_colour = "black",
+#                                        colnames.style = colnames_style(face = "bold", size = 16)
+#                                        )
+#                         )
+
+
+
+# fig_2 <- ggpubr::ggarrange(abundance_plot, abundance_table.p,
+#           ncol = 2, nrow = 1,
+#           labels = c("A", "B"),
+#           font.label = list(size = 20),
+#           widths = c(1,0.5))
+# 
+# ggexport(fig_2,
+#          filename = "Figure_2.pdf",
+#          width = 16,
+#          height = 10,
+#          unit = "in",
+#          dpi = 300)
+```
+
+```{r, include = FALSE, results = 'hide'}
+###Get HMO stats
+getTable2Stats <- function(x, digits = 1, ...){
+  getDescriptionStatsBy(x = x,
+                        by = TabledataSet_Secretors$Timepoint,
+                        digits = digits,
+                        header_count = '<i>n</i> = %s ',
+                        names_of_missing = NULL,
+                        useNA = "no",
+                        continuous_fn = describeMedian,
+                        ...)
+  
+}
+
+t2 <- list()
+t2[["2'FL"]] <-
+  getTable2Stats(TabledataSet_Secretors$`2FL_ug_ml`)
+
+t2[["3FL"]] <-
+  getTable2Stats(TabledataSet_Secretors$`3FL_ug_ml`)
+
+t2[["3'SL"]] <- 
+  getTable2Stats(TabledataSet_Secretors$`3SL_ug_ml`)
+
+t2[["6'SL"]] <- 
+  getTable2Stats(TabledataSet_Secretors$`6SL_ug_ml`)
+
+t2[["DFLac"]] <- 
+  getTable2Stats(TabledataSet_Secretors$DFLac_ug_ml)
+
+t2[["DFLNH"]] <- 
+  getTable2Stats(TabledataSet_Secretors$DFLNH_ug_ml)
+
+t2[["DFLNT"]] <- 
+  getTable2Stats(TabledataSet_Secretors$DFLNT_ug_ml)
+
+t2[["DSLNH"]] <- 
+  getTable2Stats(TabledataSet_Secretors$DSLNH_ug_ml)
+
+t2[["DSLNT"]] <- 
+  getTable2Stats(TabledataSet_Secretors$DSLNT_ug_ml)
+
+t2[["FDSLNH"]] <- 
+  getTable2Stats(TabledataSet_Secretors$FDSLNH_ug_ml)
+
+t2[["FLNH"]] <- 
+  getTable2Stats(TabledataSet_Secretors$FLNH_ug_ml)
+
+t2[["LNFPI"]] <- 
+  getTable2Stats(TabledataSet_Secretors$LNFPI_ug_ml)
+
+t2[["LNFPII"]] <- 
+  getTable2Stats(TabledataSet_Secretors$LNFPII_ug_ml)
+
+t2[["LNFPIII"]] <- 
+  getTable2Stats(TabledataSet_Secretors$LNFPIII_ug_ml)
+
+t2[["LNH"]] <- 
+  getTable2Stats(TabledataSet_Secretors$LNH_ug_ml)
+
+t2[["LNnT"]] <- 
+  getTable2Stats(TabledataSet_Secretors$LNnT_ug_ml)
+
+t2[["LNT"]] <- 
+  getTable2Stats(TabledataSet_Secretors$LNT_ug_ml)
+
+t2[["LSTb"]] <- 
+  getTable2Stats(TabledataSet_Secretors$LSTb_ug_ml)
+
+t2[["LSTc"]] <- 
+  getTable2Stats(TabledataSet_Secretors$LSTc_ug_ml)
+
+```
+
+```{r, echo=FALSE, results = 'hide'}
+mergeDesc(t2,
+          htmlTable_args = list(css.rgroup = "",
+                                caption  = "<b>Supplementary Table 1.</b> HMO concentrations split by timepoint and secretor status (graphical depiction can be seen in Figure 1). Data shown are median (interquartile range)"
+          ))
+```
+
+
+
+```
+
+```{r, echo=FALSE, results = 'hide'}
+mergeDesc(t2,
+          htmlTable_args = list(css.rgroup = "",
+                                caption  = "<b>Table 1.</b> Participant descriptive statistics for the current analysis at each timepoint. Note that this is a prospective longitudinal cohort study, whereby each timepoint represents individuals from earlier timepoints that have reached and completed that timepoint. Data shown are median (interquartile range)"
+          ))
+```
+
+At baseline (1 month postpartum), 88.4% of participants were classified as HMO secretors – defined by the presence of 2’FL and LNFPI at the 1 month timepoint – while the remaining 11.6% were classified as non-secretors (<b>Table 1</b>). Maternal BMI at baseline was 29.7 (26.8 - 33.1) kg/m^2^ and maternal age was 28.5 (24.2 - 34.0) years. Infants were 3.4 (3.1 - 3.6) kg at birth, and 54.1% female (<b>Table 1</b>).
+
+There was a significant main effect of time on concentrations of 3FL, 3'SL, LNFPI, LNFPII, LNFPIII, LSTc, DFLNT, LNH, FLNH, DFLNH, FDSLNH, DSLNH, and total HMO sum (<b>Figure 1.</b>, B, D, H, I, J, L, M, N, P, Q, R, S, T). All of these HMOs significantly decreased in concentration from 1 to 24 months, with the exception of 3FL and 3'SL, which increased 10-fold and 2-fold, respectively (from `r format(summary_function(grouped_time_only_dataSet, "3FL")[[1,2]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_time_only_dataSet, "3FL")[[1,3]], digits = 2)` - `r format(summary_function(grouped_time_only_dataSet, "3FL")[[1,4]], digits = 2)` μg/mL) to `r format(summary_function(grouped_time_only_dataSet, "3FL")[[5,2]], digits = 2)` μg/mL  (`r format(summary_function(grouped_time_only_dataSet, "3FL")[[5,3]], digits = 2)` - `r format(summary_function(grouped_time_only_dataSet, "3FL")[[5,4]], digits = 2)`μg/mL)  for 3FL and from `r format(summary_function(grouped_time_only_dataSet, "3SL")[[1,2]], digits = 2)` μg/mL (`r format(summary_function(grouped_time_only_dataSet, "3SL")[[1,3]], digits = 2)` - `r format(summary_function(grouped_time_only_dataSet, "3SL")[[1,4]], digits = 2)` μg/mL) to `r format(summary_function(grouped_time_only_dataSet, "3SL")[[5,2]], digits = 2)` μg/mL (`r format(summary_function(grouped_time_only_dataSet, "3SL")[[5,3]], digits = 2)` - `r format(summary_function(grouped_time_only_dataSet, "3SL")[[5,4]], digits = 2)`) μg/mL for 3'SL) (<b>Figure 1.</b> B, D). 2'FL, LSTb, and DSLNT did not significantly change over time (<b>Figure 1.</b> A, K, O).
+
+There was a significant main effect of secretor status on concentrations of 2'FL, 3FL, DFLac, LNT, LNFPII, LSTb, and total HMO sum (<b>Figure 1.</b> A, B, E, G, I, K, T). Of these HMOs, 2'FL, 3FL, DFLac, LNFPI, and total HMO sum were higher in concentration in secretors vs. non-secretors, while LNT, LNFPII, and LSTb were higher in concentration in non-secretors vs. secretors.
+
+There was a significant interaction between time and secretor status in concentrations of DFLac, LNFPI, LNFPII, LNFPII, DFLNH, FDSLNH, DSLNH, and total HMO sum (<b>Figure 1.</b> E, H, I, J, Q, R, S, T). DFLac increased 2-fold from 1 to 24 months in secretors but not did not change with time in non-secretors (from `r format(summary_function(grouped_dataSet, "DFLac")[[6,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "DFLac")[[6,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "DFLac")[[6,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "DFLac")[[10,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "DFLac")[[10,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "DFLac")[[10,5]], digits = 2)` μg/mL) in secretors vs. `r format(summary_function(grouped_dataSet, "DFLac")[[1,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "DFLac")[[1,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "DFLac")[[1,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "DFLac")[[5,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "DFLac")[[5,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "DFLac")[[5,5]], digits = 2)` μg/mL) in non-secretors). LNFPI decreased almost 5-fold from 1 to 24 months in secretors but did not change in non-secretors (from `r format(summary_function(grouped_dataSet, "LNFPI")[[6,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPI")[[6,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPI")[[6,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "LNFPI")[[10,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPI")[[10,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPI")[[10,5]], digits = 2)` μg/mL) in secretors vs. `r format(summary_function(grouped_dataSet, "LNFPI")[[1,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPI")[[1,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPI")[[1,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "LNFPI")[[5,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPI")[[5,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPI")[[5,5]], digits = 2)` μg/mL) in non-secretors). LNFPII remained relatively consistent in secretors but significantly decreased by 20% in non-secretors (from `r format(summary_function(grouped_dataSet, "LNFPII")[[6,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPII")[[6,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPII")[[6,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "LNFPII")[[10,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPII")[[10,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPII")[[10,5]], digits = 2)`μg/mL) in secretors vs. `r format(summary_function(grouped_dataSet, "LNFPII")[[1,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPII")[[1,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPII")[[1,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "LNFPII")[[5,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPII")[[5,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPII")[[5,5]], digits = 2)` μg/mL) in non-secretors). LNFPIII stayed relatively constant in secretors but decreased almost 5-fold in non-secretors  (from `r format(summary_function(grouped_dataSet, "LNFPIII")[[6,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPIII")[[6,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPIII")[[6,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "LNFPIII")[[10,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPIII")[[10,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPIII")[[10,5]], digits = 2)` μg/mL) in secretors vs. `r format(summary_function(grouped_dataSet, "LNFPIII")[[1,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPIII")[[1,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPIII")[[1,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "LNFPIII")[[5,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "LNFPIII")[[5,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "LNFPIII")[[5,5]], digits = 2)` μg/mL) in non-secretors). DFLNH stayed constant in secretors but increased 4-fold from 1 to 24 months in non-secretors (from `r format(summary_function(grouped_dataSet, "DFLNH")[[6,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "DFLNH")[[6,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "DFLNH")[[6,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "DFLNH")[[10,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "DFLNH")[[10,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "DFLNH")[[10,5]], digits = 2)` μg/mL) in secretors vs. `r format(summary_function(grouped_dataSet, "DFLNH")[[1,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "DFLNH")[[1,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "DFLNH")[[1,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "DFLNH")[[5,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "DFLNH")[[5,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "DFLNH")[[5,5]], digits = 2)` μg/mL) in non-secretors). FDSLNH remained consistent in secretors but decreased 3-fold in non-secretors (from `r format(summary_function(grouped_dataSet, "FDSLNH")[[6,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "FDSLNH")[[6,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "FDSLNH")[[6,5]], digits = 2)` μg/mL)  to `r format(summary_function(grouped_dataSet, "FDSLNH")[[10,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "FDSLNH")[[10,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "FDSLNH")[[10,5]], digits = 2)` μg/mL) in secretors vs. `r format(summary_function(grouped_dataSet, "FDSLNH")[[1,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "FDSLNH")[[1,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "FDSLNH")[[1,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "FDSLNH")[[5,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "FDSLNH")[[5,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "FDSLNH")[[5,5]], digits = 2)` μg/mL) in non-secretors). Finally, HMO sum decreased by 30% with time in secretors but remained relatively constant in non-secretors (from `r format(summary_function(grouped_dataSet, "SUM")[[6,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "SUM")[[6,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "SUM")[[6,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "SUM")[[10,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "SUM")[[10,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "SUM")[[10,5]], digits = 2)` μg/mL) in secretors vs. `r format(summary_function(grouped_dataSet, "SUM")[[1,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "SUM")[[1,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "SUM")[[1,5]], digits = 2)` μg/mL) to `r format(summary_function(grouped_dataSet, "SUM")[[5,3]], digits = 2)` μg/mL (IQR `r format(summary_function(grouped_dataSet, "SUM")[[5,4]], digits = 2)`-`r format(summary_function(grouped_dataSet, "SUM")[[5,5]], digits = 2)`) in non-secretors μg/mL). While data in Figure 1 represent summary statistics (median and interquartile range), plots showing data for each individual are included as Supplementary Figure 1.
+
+Figure 2 A. depicts how the relative abundances of individual HMOs changed over the course of lactation, split by secretor status. Figure 2 B. contains the p-values to accompany Figure 2 A. There was a significant main effect of time on the relative abundance of all HMOs except 2'FL, DFLac, and DSLNT. These trends generally followed the same patterns as absolute concentrations, whereby most HMOs decreased in relative abundance, with the exception of 3FL and 3'SL, which increased in relative abundance over the course of lactation (`r format(summary_function(grouped_time_only_dataSet_abundance, "3FL")[[1,2]], digits = 2)`% (IQR `r format(summary_function(grouped_time_only_dataSet_abundance, "3FL")[[1,3]], digits = 2)`-`r format(summary_function(grouped_time_only_dataSet_abundance, "3FL")[[1,4]], digits = 2)`%) to `r format(summary_function(grouped_time_only_dataSet_abundance, "3FL")[[5,2]], digits = 2)`%  (`r format(summary_function(grouped_time_only_dataSet_abundance, "3FL")[[5,3]], digits = 2)`-`r format(summary_function(grouped_time_only_dataSet_abundance, "3FL")[[5,4]], digits = 2)`)% and `r format(summary_function(grouped_time_only_dataSet_abundance, "3SL")[[1,2]], digits = 2)`% (`r format(summary_function(grouped_time_only_dataSet_abundance, "3SL")[[1,3]], digits = 2)`-`r format(summary_function(grouped_time_only_dataSet_abundance, "3SL")[[1,4]], digits = 2)`%) to `r format(summary_function(grouped_time_only_dataSet_abundance, "3SL")[[5,2]], digits = 2)`% (`r format(summary_function(grouped_time_only_dataSet_abundance, "3SL")[[5,3]], digits = 2)`-`r format(summary_function(grouped_time_only_dataSet_abundance, "3SL")[[5,4]], digits = 2)`)%, respectively). 2'FL remained relatively consistent in relative abundance from 1 to 24 months, and was still the most abundant HMO overall at 24 months (`r format(summary_function(grouped_time_only_dataSet_abundance, "2FL")[[1,2]], digits = 2)`% (IQR `r format(summary_function(grouped_time_only_dataSet_abundance, "2FL")[[1,3]], digits = 2)`-`r format(summary_function(grouped_time_only_dataSet_abundance, "2FL")[[1,4]], digits = 2)`%) to `r format(summary_function(grouped_time_only_dataSet_abundance, "2FL")[[5,2]], digits = 2)`%  (`r format(summary_function(grouped_time_only_dataSet_abundance, "2FL")[[5,3]], digits = 2)`-`r format(summary_function(grouped_time_only_dataSet_abundance, "2FL")[[5,4]], digits = 2)`)%).
+
+There was a significant main effect of secretor status on the relative abundance of all HMOs except LNnT, 3SL, LNFPI, and LSTc. Only 2'FL and DFLac were higher in relative abundance in secretors, while 3FL, 6SL, LNT, LNFPII, LNFPIII, LSTb, DSLNT, FDSLNH, and DSLNH were higher in relative abundance in non-secretors. 
+
+There were also significant interactions between time and secretor status in the relative abundances of 3FL, LNnT, DFLac, 6SL, LNFPI, LNFPII, LNFPIII, LSTb, LSTc, DFLNT, DFLNH, FDSLNH, and DSLNH. While the differences in change over time between the two secretor groups were subtle for most of these HMOs, it is apparent that there was a greater increase in relative abundance of 3FL in non-secretors (20-fold) than in secretors (10-fold) (`r format(summary_function(grouped_dataSet_abundance, "3FL")[[6,3]], digits = 2)`% (IQR `r format(summary_function(grouped_dataSet_abundance, "3FL")[[6,4]], digits = 2)`-`r format(summary_function(grouped_dataSet_abundance, "3FL")[[6,5]], digits = 2)`%) to `r format(summary_function(grouped_dataSet_abundance, "3FL")[[10,3]], digits = 2)`% (IQR `r format(summary_function(grouped_dataSet_abundance, "3FL")[[10,4]], digits = 2)`-`r format(summary_function(grouped_dataSet_abundance, "3FL")[[10,5]], digits = 2)`%) in secretors vs. `r format(summary_function(grouped_dataSet_abundance, "3FL")[[1,3]], digits = 2)`% (IQR `r format(summary_function(grouped_dataSet_abundance, "3FL")[[1,4]], digits = 2)`-`r format(summary_function(grouped_dataSet_abundance, "3FL")[[1,5]], digits = 2)`%) to `r format(summary_function(grouped_dataSet_abundance, "3FL")[[5,3]], digits = 2)`% (IQR `r format(summary_function(grouped_dataSet_abundance, "3FL")[[5,4]], digits = 2)`-`r format(summary_function(grouped_dataSet_abundance, "3FL")[[5,5]], digits = 2)`%) in non-secretors).
+
+We saw no effect of any other factors (maternal age, BMI, or socioeconomic status) on changes in HMOs over time.
